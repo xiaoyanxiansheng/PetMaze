@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace PetMaze
 {
@@ -22,20 +23,27 @@ namespace PetMaze
 
     public class Map : MonoBehaviour
     {
-
+        #region 面板配置属性
+        [SerializeField] private string _id = "";
+        [SerializeField] private string _savePath = "D:/xyj/PetMazeEditor/PetMaze/Assets/Tools/PetMazeEditor/TestFile/";
+        [SerializeField] private string _eventTypePath = "D:/xyj/PetMazeEditor/PetMaze/Assets/Tools/PetMazeEditor/TestFile/";
         [SerializeField] private int _size = 10;                                    // 大小
         [SerializeField] private Theme _theme = Theme.Default;                      // 主题
         [SerializeField] private int _layer = 1;                                    // 层级
+        [SerializeField] private bool _isFog = true;
         [SerializeField] private EventWrap _mapEventWrap = new EventWrap();         // 地图配置
         [SerializeField] private EventWrap[] _areaEventWrap = new EventWrap[4];     // 区域配置 TODO 大小不许改变
+        #endregion
 
+        #region menber
         private int _height = 10;
         private int _width = 10;
         private Color _selectColor = new Color(1, 0.62f, 0.14f);
         private Color _disSelectColor = new Color(0.5f, 0.5f, 0.5f);
         private static Map _instance;
-        public const float GridCellSize = 2f;
+        private Dictionary<int, List<string>> _mapEventTypeList = new Dictionary<int, List<string>>();
 
+        public const float GridCellSize = 2f;
         public static Map Instance
         {
             get
@@ -45,7 +53,7 @@ namespace PetMaze
                 return _instance;
             }
         }
-
+        public string SavePath { get { return _savePath; } set { _savePath = value; } }
         public int Height
         {
             get
@@ -58,7 +66,6 @@ namespace PetMaze
                 _height = value;
             }
         }
-
         public int Width
         {
             get
@@ -72,7 +79,6 @@ namespace PetMaze
                 
             }
         }
-
         public int Size
         {
             get
@@ -88,38 +94,15 @@ namespace PetMaze
             }
         }
 
-        /// <summary>
-        /// 绘制边框
-        /// </summary>
-        private void DrawBorderGizmo()
-        {
-            float disWidth = _width * GridCellSize;
-            float disHeight = _height * GridCellSize;
-            Vector3 startPos = transform.position;
-            Gizmos.DrawLine(startPos, startPos + new Vector3(disWidth, 0, 0));
-            Gizmos.DrawLine(startPos, startPos + new Vector3(0, disHeight, 0));
-            Gizmos.DrawLine(startPos + new Vector3(0, disHeight, 0), startPos + new Vector3(disWidth, disHeight, 0));
-            Gizmos.DrawLine(startPos + new Vector3(disWidth, 0, 0), startPos + new Vector3(disWidth, disHeight, 0));
-        }
-        /// <summary>
-        /// 绘制网格线
-        /// </summary>
-        private void DrawGridLineGizmo()
-        {
-            Vector3 startPos = transform.position;
-            for (int i = 1; i < _width; i++)
-            {
-                Gizmos.DrawLine(startPos + new Vector3(GridCellSize * i, 0, 0), startPos + new Vector3(GridCellSize * i, GridCellSize * _height, 0));
-            }
-            for (int i = 1; i < _height; i++)
-            {
-                Gizmos.DrawLine(startPos + new Vector3(0, GridCellSize * i, 0), startPos + new Vector3(GridCellSize * _width, GridCellSize * i, 0));
-            }
-        }
+        public Dictionary<int, List<string>> MapEventTypeList { get { return _mapEventTypeList; } set { _mapEventTypeList = value; } }
 
+        public string EventTypePath { get { return _eventTypePath; } set { _eventTypePath = value; } }
+        #endregion
+
+        #region unity 提供
         private void Awake()
         {
-            _instance = this;
+
         }
 
         /// <summary>
@@ -127,11 +110,7 @@ namespace PetMaze
         /// </summary>
         private void OnDrawGizmos()
         {
-            Color oldColor = Gizmos.color;
-            Gizmos.color = _disSelectColor;
-            DrawBorderGizmo();
             DrawGridLineGizmo();
-            Gizmos.color = oldColor;
         }
 
         /// <summary>
@@ -139,10 +118,85 @@ namespace PetMaze
         /// </summary>
         private void OnDrawGizmosSelected()
         {
+            DrawBorderGizmo();
+            DrawFourAreaGizmo();
+        }
+
+        #endregion
+
+        #region 绘制地图
+        /// <summary>
+        /// 边框
+        /// </summary>
+        private void DrawBorderGizmo()
+        {
             Color oldColor = Gizmos.color;
             Gizmos.color = _selectColor;
-            DrawBorderGizmo();
+            float disWidth = _width * GridCellSize;
+            float disHeight = _height * GridCellSize;
+            Vector3 startPos = transform.position;
+            Gizmos.DrawLine(startPos, startPos + new Vector3(disWidth, 0, 0));
+            Gizmos.DrawLine(startPos, startPos + new Vector3(0, disHeight, 0));
+            Gizmos.DrawLine(startPos + new Vector3(0, disHeight, 0), startPos + new Vector3(disWidth, disHeight, 0));
+            Gizmos.DrawLine(startPos + new Vector3(disWidth, 0, 0), startPos + new Vector3(disWidth, disHeight, 0));
             Gizmos.color = oldColor;
+        }
+        /// <summary>
+        /// 网格
+        /// </summary>
+        private void DrawGridLineGizmo()
+        {
+            Color oldColor = Gizmos.color;
+            Gizmos.color = _disSelectColor;
+            Vector3 startPos = transform.position;
+            for (int i = 0; i <= _width; i++)
+            {
+                Gizmos.DrawLine(startPos + new Vector3(GridCellSize * i, 0, 0), startPos + new Vector3(GridCellSize * i, GridCellSize * _height, 0));
+            }
+            for (int i = 0; i <= _height; i++)
+            {
+                Gizmos.DrawLine(startPos + new Vector3(0, GridCellSize * i, 0), startPos + new Vector3(GridCellSize * _width, GridCellSize * i, 0));
+            }
+            Gizmos.color = oldColor;
+        }
+        /// <summary>
+        /// 区域
+        /// </summary>
+        private void DrawFourAreaGizmo()
+        {
+            Color oldColor = Gizmos.color;
+            Gizmos.color = _selectColor;
+            float disWidth = _width * GridCellSize;
+            float disHeight = _height * GridCellSize;
+            float halfDisWidth = disWidth * 0.5f;
+            float halfDisHeight = disWidth * 0.5f;
+            Vector3 startPos = transform.position;
+            Gizmos.DrawLine(startPos + new Vector3(0, halfDisHeight,0), startPos + new Vector3(disWidth, halfDisHeight, 0));
+            Gizmos.DrawLine(startPos + new Vector3(halfDisWidth, 0, 0), startPos + new Vector3(halfDisWidth, disHeight, 0));
+            Gizmos.color = oldColor;
+        }
+        #endregion
+
+        #region 帮助函数
+        public bool CheckMapValid()
+        {
+            if (_id.Trim() == "")
+            {
+                Debug.LogError("地图ID未配置");
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool IsCanSave()
+        {
+            bool isCanSave = false;
+
+            if (_id.Trim() != "")
+                isCanSave = true;
+
+            return isCanSave;
         }
 
         /// <summary>
@@ -190,7 +244,7 @@ namespace PetMaze
         {
             bool isValid = false;
 
-            if (mapCoordinate.x >= 1 && mapCoordinate.x <= _width 
+            if (mapCoordinate.x >= 1 && mapCoordinate.x <= _width
                 && mapCoordinate.y >= 1 && mapCoordinate.y <= _height)
             {
                 isValid = true;
@@ -202,5 +256,6 @@ namespace PetMaze
         {
             return IsMapCoordinateValid(GetMapCoordinate(worldCoordinate));
         }
+        #endregion
     }
 }

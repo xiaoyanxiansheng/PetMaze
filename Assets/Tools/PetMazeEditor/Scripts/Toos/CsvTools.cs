@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System.Text;
+using System.IO;
 using System.Collections.Generic;
+using UnityEngine;
 /// <summary>
 /// 参考 https://blog.csdn.net/eazey_wj/article/details/78821193
 /// </summary>
@@ -7,11 +9,57 @@ namespace PetMaze
 {
     public class CsvData
     {
+        #region 私有变量
         private static CsvData _instance;
+        #endregion
 
-        private List<string> _keyList = new List<string>();
-        private List<List<string>> _valueList = new List<List<string>>();
+        #region 私有方法
+        private void FillAll(Dictionary<int, List<string>>  csvMap, string[] lines)
+        {
+            for (int i = 0; i < lines.Length; i++)
+            {
+                csvMap[i] = new List<string>();
+                FillOne(csvMap[i], lines[i]);
+            }
+        }
+        private void FillOne(List<string> fill, string s)
+        {
+            string[] splitStr = s.Split(',');
+            for (int j = 0; j < splitStr.Length; j++)
+            {
+                fill.Add(splitStr[j]);
+            }
+        }
+        private string[] GetFileStr(Dictionary<int, List<string>> csvMap)
+        {
+            string[] linesStr = new string[csvMap.Count];
+            for (int i = 0; i < csvMap.Count; i++){
+                linesStr[i] = "";
+                for (int j = 0;j < csvMap[i].Count; j++)
+                {
+                    if (j == 0)
+                    {
+                        linesStr[i] += csvMap[i][j];
+                    }
+                    else
+                    {
+                        linesStr[i] += "," + csvMap[i][j];
+                    }
+                }
+            }
+            return linesStr;
+        }
+        private bool IsValid(int x, int y)
+        {
+            return true;
+        }
+        private bool IsPathValid(string path)
+        {
+            return path.Trim() != "";
+        }
+        #endregion
 
+        #region 增删改存开
         public static CsvData Instance
         {
             get
@@ -22,37 +70,64 @@ namespace PetMaze
             }
         }
 
-        public void Open(string path)
+        public void FillCsv(Dictionary<int, List<string>> csvMap, string path)
         {
-
-        }
-
-        public void Create()
-        {
-
-        }
-
-        public void Save()
-        {
-
-        }
-
-        public void Modify(int x, int y,string value)
-        {
-            if (IsValid(x, y))
+            if (!IsPathValid(path))
+            {
+                Debug.LogError("路径不合法 : " + path);
                 return;
-            _valueList[x][y] = value;
+            }
+            if (!File.Exists(path))
+            {
+                Debug.LogError("文件不存在 : " + path);
+                return;
+            }
+            string[] lines = File.ReadAllLines(path);
+            FillAll(csvMap, lines);
         }
 
-        public bool IsValid(int x, int y)
+        public bool Save(Dictionary<int, List<string>> csvMap, string path)
         {
-            bool isValid = false;
+            if (!IsPathValid(path))
+            {
+                Debug.LogError("路径不合法 : " + path);
+                return false;
+            }
 
-            if (y >= 0 && y < _keyList.Count)
-                if (x >= 0 && x < _valueList.Count && y < _valueList[x].Count)
-                    isValid = true;
+            if (!File.Exists(path))
+            {
+                FileStream fs = File.Create(path);
+                fs.Close();
+                fs.Dispose();
+            }
 
-            return isValid;
+            string[] fileStr = GetFileStr(csvMap);
+            File.WriteAllLines(path, fileStr);
+            return true;
         }
+        #endregion
+
+        #region 测试
+        public string GetLogString(Dictionary<int, List<string>> csvMap)
+        {
+            string logStr = "";
+
+            for(int i = 0; i < csvMap.Count; i++)
+            {
+                for(int j = 0; j < csvMap[i].Count; j++)
+                {
+                    logStr += "_" + csvMap[i][j];
+                }
+                logStr += "\n";
+            }
+
+            return logStr;
+        }
+
+        public void Log(Dictionary<int, List<string>> csvMap)
+        {
+            Debug.Log(GetLogString(csvMap));
+        }
+        #endregion
     }
 }

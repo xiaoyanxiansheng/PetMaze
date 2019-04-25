@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
@@ -16,6 +17,24 @@ namespace PetMaze
             RenderSettings.skybox = null;
             GameObject map = new GameObject("map");
             map.AddComponent<Map>();
+        }
+
+        public static List<T> GetAssets<T>(string path) where T : MonoBehaviour
+        {
+            T temp;
+            string assetPath;
+            GameObject asset;
+            List<T> assetList = new List<T>();
+            string[] guids = AssetDatabase.FindAssets("t:Prefab",new string[] { path});
+            for(int i = 0;i < guids.Length; i++)
+            {
+                assetPath = AssetDatabase.GUIDToAssetPath(guids[i]);
+                asset = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+                temp = asset.GetComponent<T>();
+                if (temp)
+                    assetList.Add(temp);
+            }
+            return assetList;
         }
     }
 }
