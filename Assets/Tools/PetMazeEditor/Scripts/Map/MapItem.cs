@@ -7,8 +7,13 @@ namespace PetMaze
 {
     public class MapItem : MonoBehaviour
     {
-        [SerializeField] private int _pointX = 0;
-        [SerializeField] private int _pointY = 0;
+        #region 配置
+        [SerializeField] private int _eventType = 0;
+        [SerializeField] private int _eventFatherType = 0;
         [SerializeField] private EventWrap _mapEventWrap = new EventWrap();
+        #endregion
+
+        private int _pointX = 0;
+        private int _pointY = 0;
     }
 }

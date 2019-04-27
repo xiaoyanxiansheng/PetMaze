@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+/// <summary>
+/// http://www.360doc.com/content/18/0803/14/22877383_775399366.shtml
+/// </summary>
 namespace PetMaze
 {
 
@@ -28,7 +30,7 @@ namespace PetMaze
         [SerializeField] private string _savePath = "D:/xyj/PetMazeEditor/PetMaze/Assets/Tools/PetMazeEditor/TestFile/";
         [SerializeField] private string _eventTypePath = "D:/xyj/PetMazeEditor/PetMaze/Assets/Tools/PetMazeEditor/TestFile/";
         [SerializeField] private int _size = 10;                                    // 大小
-        [SerializeField] private Theme _theme = Theme.Default;                      // 主题
+        [SerializeField] private string _theme = "";                                // 主题
         [SerializeField] private int _layer = 1;                                    // 层级
         [SerializeField] private bool _isFog = true;
         [SerializeField] private EventWrap _mapEventWrap = new EventWrap();         // 地图配置

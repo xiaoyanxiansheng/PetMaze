@@ -17,6 +17,18 @@ namespace PetMaze
             RenderSettings.skybox = null;
             GameObject map = new GameObject("map");
             map.AddComponent<Map>();
+
+            string settingPath = Application.dataPath + "/Tools/PetMazeEditor/Prefabs/MapSetting";
+            MapSetting mapSetting = AssetDatabase.LoadAssetAtPath<MapSetting>(settingPath);
+            if (mapSetting != null)
+            {
+                UnityEditorInternal.ComponentUtility.CopyComponent(mapSetting);
+                UnityEditorInternal.ComponentUtility.PasteComponentAsNew(map);
+            }
+            else
+            {
+                Debug.LogError(settingPath+ " 路径下不存在MapSetting配置");
+            }
         }
 
         public static List<T> GetAssets<T>(string path) where T : MonoBehaviour
