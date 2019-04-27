@@ -149,5 +149,9 @@ namespace PetMaze
             return id;
         }
         #endregion
+
+        #region 帮助
+        
+        #endregion
     }
 }

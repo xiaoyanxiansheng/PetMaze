@@ -10,7 +10,7 @@ namespace PetMaze
         private List<string> _tabNameList;
         private Dictionary<int , List<EventInfo>> _eventMap;
         private int _selectTab = 0;
-        private int _selectIndex = -1;
+        private EventInfo _selectEventInfo;
         private int ItemWidth = 60;
         private Vector2 _scrollViewPosition = Vector2.zero;
 
@@ -84,12 +84,31 @@ namespace PetMaze
                 return;
             }
 
+            int index = -1;
+            if (_selectEventInfo != null)
+            {
+                for (int j = 0; j < eventList.Count; j++)
+                {
+                    if (eventList[j] == _selectEventInfo)
+                    {
+                        index = j;
+                        break;
+                    }
+                }
+            }
             _scrollViewPosition = GUILayout.BeginScrollView(_scrollViewPosition);
             int colCapacity = Mathf.FloorToInt(position.width / ItemWidth);
-            _selectIndex = GUILayout.SelectionGrid(_selectIndex, GetGUIContentFromEventList(), colCapacity, GetGUIStyle());
+            index = GUILayout.SelectionGrid(index, GetGUIContentFromEventList(), colCapacity, GetGUIStyle());
             GUILayout.EndScrollView();
 
-            DSelectEventIdCall(_eventMap[_selectTab][_selectIndex]);
+            if (index >= 0)
+            {
+                _selectEventInfo = eventList[index];
+                if (DSelectEventIdCall != null)
+                {
+                    DSelectEventIdCall(_selectEventInfo);
+                }
+            }
         }
 
         private GUIContent[] GetGUIContentFromEventList()

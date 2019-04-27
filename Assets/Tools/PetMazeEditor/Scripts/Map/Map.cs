@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.UI;
 /// <summary>
 /// http://www.360doc.com/content/18/0803/14/22877383_775399366.shtml
@@ -23,6 +24,7 @@ namespace PetMaze
         public List<EventType> EList = new List<EventType>();
     }
 
+    [ExecuteInEditMode]
     public class Map : MonoBehaviour
     {
         #region 面板配置属性
@@ -44,6 +46,11 @@ namespace PetMaze
         private Color _disSelectColor = new Color(0.5f, 0.5f, 0.5f);
         private static Map _instance;
         private Dictionary<int, List<string>> _mapEventTypeList = new Dictionary<int, List<string>>();
+
+        #region 场景编辑部分数据 这部分数据放在编辑器类中 每次关闭都会被清理掉
+        [NonSerialized] public Dictionary<int, Dictionary<int, GameObject>> MapInstanceList;
+        [NonSerialized] public EventInfo SelectEventInfo;
+        #endregion
 
         public const float GridCellSize = 2f;
         public static Map Instance
@@ -101,8 +108,18 @@ namespace PetMaze
         public string EventTypePath { get { return _eventTypePath; } set { _eventTypePath = value; } }
         #endregion
 
-        #region unity 提供
+        #region 基本函数
         private void Awake()
+        {
+            
+        }
+
+        private void OnEnable()
+        {
+            InitMapInstance();
+        }
+
+        private void OnDisable()
         {
 
         }
@@ -211,8 +228,8 @@ namespace PetMaze
             Vector2 mapCoordinate = new Vector2(0, 0);
 
             Vector3 diff = worldCoordinate - transform.position;
-            mapCoordinate.x = Mathf.Ceil(diff.x / GridCellSize);
-            mapCoordinate.y = Mathf.Ceil(diff.y / GridCellSize);
+            mapCoordinate.x = Mathf.Floor(diff.x / GridCellSize);
+            mapCoordinate.y = Mathf.Floor(diff.y / GridCellSize);
 
             return mapCoordinate;
         }
@@ -225,8 +242,8 @@ namespace PetMaze
         {
             Vector3 worldCoordinate = new Vector3(0, 0, 0);
 
-            worldCoordinate.x = (mapCoordinate.x - 0.5f) * GridCellSize;
-            worldCoordinate.y = (mapCoordinate.y - 0.5f) * GridCellSize;
+            worldCoordinate.x = (mapCoordinate.x + 0.5f) * GridCellSize;
+            worldCoordinate.y = (mapCoordinate.y + 0.5f) * GridCellSize;
 
             return transform.position + worldCoordinate;
         }
@@ -257,6 +274,36 @@ namespace PetMaze
         public bool IsWorldCoordinateValid(Vector3 worldCoordinate)
         {
             return IsMapCoordinateValid(GetMapCoordinate(worldCoordinate));
+        }
+
+        public void InitMapInstance()
+        {
+            MapInstanceList = new Dictionary<int, Dictionary<int, GameObject>>();
+            for (int i = 0; i < Height; i++)
+            {
+                MapInstanceList[i] = new Dictionary<int, GameObject>();
+                for (int j = 0; j < Width; j++)
+                {
+                    MapInstanceList[i][j] = null;
+                }
+            }
+        }
+        public void UpdateSelectEventInfo(EventInfo eventInfo)
+        {
+            SelectEventInfo = eventInfo;
+        }
+        public bool IsPointValid(int pointx, int pointy)
+        {
+            bool isValid = false;
+
+            int maxHeight = Map.Instance.Height;
+            int maxWidth = Map.Instance.Width;
+            if (pointx >= 0 && pointx < maxWidth && pointy >= 0 && pointy < maxHeight)
+            {
+                isValid = true;
+            }
+
+            return isValid;
         }
         #endregion
     }
