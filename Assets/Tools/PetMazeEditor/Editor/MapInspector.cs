@@ -14,7 +14,6 @@ namespace PetMaze
     {
         #region menber
         private Map _target;
-        private Dictionary<int, Dictionary<int, GameObject>> _mapInstanceList;
 
         // 事件相关
         private GameObject _dragEvent = null;
@@ -29,8 +28,9 @@ namespace PetMaze
         }
         private void OnEnable()
         {
-            _mapInstanceList = Map.Instance.MapInstanceList;
             EventWindow.DSelectEventIdCall += UpdateSelectEventInfo;
+            CreateEventInsAll();
+            _target.transform.hideFlags = HideFlags.NotEditable;
         }
         private void OnDisable()
         {
@@ -65,6 +65,7 @@ namespace PetMaze
             OnSceneCheckBtn();
             OnSceneCsvOpenBtn();
             OnSceneCsvSaveBtn();
+            OnSceneRefreshMapBtn();
             GUILayout.EndArea();
             Handles.EndGUI();
         }
@@ -101,8 +102,21 @@ namespace PetMaze
                 }
             }
         }
+        private void OnSceneRefreshMapBtn()
+        {
+            if (GUILayout.Button("刷新整个地图"))
+            {
+                DeleteEventInsAll();
+                CreateEventInsAll();
+                Repaint();
+            }
+        }
+        /// <summary>
+        /// 事件相关
+        /// </summary>
         private void EventHandheld()
         {
+            Tools.current = Tool.None;
             SceneView.currentDrawingSceneView.in2DMode = true;
             HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
 
@@ -117,8 +131,22 @@ namespace PetMaze
             if (eventType == EventType.MouseDown)
             {
                 GameObject eventIns = GetEventIns(coordinate);
-                if (eventIns != null) _dragEvent = eventIns;
-                else _dragEvent = CreateEventIns(coordinate);
+                int buttonIndex = Event.current.button;
+                if (buttonIndex == 0)
+                {
+                    if (eventIns != null) _dragEvent = eventIns;
+                    else _dragEvent = RefreshAddEventIns(coordinate);
+                }else if (buttonIndex == 1)
+                {
+                    if (eventIns != null)
+                    {
+                        GenericMenu menu = new GenericMenu();
+                        menu.AddItem(new GUIContent("删除"), false, ClickDelete, eventIns);
+                        menu.AddItem(new GUIContent("编辑"), false, ClickEditor, eventIns);
+                        menu.ShowAsContext();
+                        Event.current.Use();
+                    }
+                }
             }
             else if(eventType == EventType.MouseUp)
             {
@@ -130,17 +158,53 @@ namespace PetMaze
             {
                 if (_dragEvent != null)
                 {
-                    if (_target.IsPointValid((int)coordinate.x,(int)coordinate.y))
-                    {
-                        if (GetEventIns(coordinate) == null)
-                        {
-                            UpdateEventIns(_dragEvent, coordinate);
-                            _dragEvent.transform.position = Map.Instance.GetWorldCoordinate(coordinate);
-                            Repaint();
-                        }
-                    }
+                    RefreshUpdateCoordinate(GetEventInsPoint(_dragEvent), coordinate);
                 }
             }
+        }
+        /// <summary>
+        /// 改变
+        /// </summary>
+        /// <param name="preCoordinate"></param>
+        /// <param name="coordinate"></param>
+        private bool UpdateCoordinate(Vector2 preCoordinate,Vector2 coordinate)
+        {
+            if (GetEventIns(coordinate) != null)
+            {
+                return false;
+            }
+            int prePointx = (int)preCoordinate.x;
+            int prePointy = (int)preCoordinate.y;
+            if (!_target.IsPointValid(prePointx, prePointy))
+            {
+                return false;
+            }
+            int pointx = (int)coordinate.x;
+            int pointy = (int)coordinate.y;
+            if (!_target.IsPointValid(pointx, pointy))
+            {
+                return false;
+            }
+            _target.MapInstanceList[pointx][pointy] = _target.MapInstanceList[prePointx][prePointy];
+            _target.MapInstanceList[prePointx][prePointy] = null;
+            _target.MapInstanceList[pointx][pointy].transform.position = Map.Instance.GetWorldCoordinate(coordinate);
+            return true;
+        }
+        private void RefreshUpdateCoordinate(Vector2 preCoordinate, Vector2 coordinate)
+        {
+            if (UpdateCoordinate(preCoordinate, coordinate))
+            {
+                Repaint();
+            }
+        }
+        private void ClickDelete(object ob)
+        {
+            GameObject go = (GameObject)ob;
+            RefreshDeleteEventIns(GetEventInsPoint(go));
+        }
+        private void ClickEditor(object ob)
+        {
+
         }
         private GameObject GetEventIns(Vector2 coordinate)
         {
@@ -150,28 +214,20 @@ namespace PetMaze
             {
                 return null;
             }
-            return _mapInstanceList[pointx][pointy];
+            return _target.MapInstanceList[pointx][pointy];
         }
-        /// <summary>
-        /// 可以将事件节点移出编辑范围
-        /// </summary>
-        /// <param name="ins"></param>
-        /// <param name="toCoordinate"></param>
-        private void UpdateEventIns(GameObject ins, Vector2 toCoordinate)
+        private Vector2 GetEventInsPoint(GameObject eventIns)
         {
-            int coorx = (int)toCoordinate.x;
-            int coory = (int)toCoordinate.y;
-            int pointx = -1;
-            int pointy = -1;
-            for(int i = 0;i< _mapInstanceList.Count; i++)
+            Vector2 vec = new Vector2(-1,-1);
+            for (int i = 0; i < _target.MapInstanceList.Count; i++)
             {
                 bool isBreak = false;
-                for(int j = 0;j< _mapInstanceList[i].Count; j++)
+                for (int j = 0; j < _target.MapInstanceList[i].Count; j++)
                 {
-                    if (_mapInstanceList[i][j] == ins)
+                    if (_target.MapInstanceList[i][j] == eventIns)
                     {
-                        pointx = i;
-                        pointy = j;
+                        vec.x = i;
+                        vec.y = j;
                         isBreak = true;
                         break;
                     }
@@ -181,12 +237,88 @@ namespace PetMaze
                     break;
                 }
             }
-            if (pointx != -1 && pointy != -1)
-            {
-                _mapInstanceList[pointx][pointy] = null;
-            }
-            _mapInstanceList[coorx][coory] = ins;
+            return vec;
         }
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="coordinate"></param>
+        private void DeleteEventIns(Vector2 coordinate)
+        {
+            int coorx = (int)coordinate.x;
+            int coory = (int)coordinate.y;
+            if (_target.IsPointValid(coorx, coory))
+            {
+                GameObject go = _target.MapInstanceList[coorx][coory];
+                if (go != null) DestroyImmediate(go);
+                _target.MapInstanceList[coorx][coory] = null;
+            }
+        }
+        /// <summary>
+        /// 删除之后刷新
+        /// </summary>
+        /// <param name="coordinate"></param>
+        private void RefreshDeleteEventIns(Vector2 coordinate)
+        {
+            DeleteEventIns(coordinate);
+            Repaint();
+        }
+        private void DeleteEventInsAll()
+        {
+            foreach(Dictionary<int, GameObject> gos in _target.MapInstanceList.Values)
+            {
+                foreach(GameObject go in gos.Values)
+                {
+                    DestroyImmediate(go);
+                }
+            }
+            Map.Instance.InitMapInstance();
+        }
+        /// <summary>
+        /// 增加 
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
+        private GameObject AddEventIns(Vector2 coordinate,GameObject addIns = null)
+        {
+            GameObject eventIns = GetEventIns(coordinate);
+            if (eventIns != null)
+            {
+                return null;
+            }
+
+            int pointx = (int)coordinate.x;
+            int pointy = (int)coordinate.y;
+
+            if (!_target.MapInstanceList.ContainsKey(pointx))
+            {
+                _target.MapInstanceList[pointx] = new Dictionary<int, GameObject>();
+            }
+
+            if (addIns == null)
+            {
+                addIns = CreateEventIns(coordinate);
+            }
+
+            _target.MapInstanceList[pointx][pointy] = addIns;
+
+            return addIns;
+        }
+        /// <summary>
+        /// 增加之后刷新
+        /// </summary>
+        /// <param name="coordinate"></param>
+        private GameObject RefreshAddEventIns(Vector2 coordinate)
+        {
+            GameObject go = AddEventIns(coordinate);
+            Repaint();
+            return go;
+        }
+        /// <summary>
+        /// 创建
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
         private GameObject CreateEventIns(Vector2 coordinate)
         {
             if (_target.SelectEventInfo == null)
@@ -208,13 +340,13 @@ namespace PetMaze
             spRender.sprite = Sprite.Create(tex, new Rect(0,0,tex.width,tex.height), new Vector2(0.5f, 0.5f));
             go.transform.localScale = new Vector3(200 / tex.width, 200 / tex.height, 1);
             go.transform.position = Map.Instance.GetWorldCoordinate(coordinate);
-            if (!_mapInstanceList.ContainsKey(pointx))
-            {
-                _mapInstanceList[pointx] = new Dictionary<int, GameObject>();
-            }
-            _mapInstanceList[pointx][pointy] = go;
-
+            go.transform.hideFlags = HideFlags.NotEditable;
             return go;
+        }
+        private void CreateEventInsAll()
+        {
+            // TODO 根据数据创建全部
+
         }
         #endregion
         #endregion
