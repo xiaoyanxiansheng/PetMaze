@@ -40,6 +40,7 @@ namespace PetMaze
         // 区域配置
         public AreaEventSetting AreaEventSetting = new AreaEventSetting();
         // 地块配置
+        [NonSerialized]
         public MapItem MapItemSetting = new MapItem();
         #endregion
 
