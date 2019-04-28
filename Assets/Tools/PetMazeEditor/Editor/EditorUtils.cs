@@ -16,18 +16,19 @@ namespace PetMaze
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene);
             RenderSettings.skybox = null;
             GameObject map = new GameObject("map");
-            map.AddComponent<Map>();
 
             string settingPath = "Assets/Tools/PetMazeEditor/Prefabs/MapSetting.prefab";
             MapSetting mapSetting = AssetDatabase.LoadAssetAtPath<MapSetting>(settingPath);
             if (mapSetting != null)
             {
-                PasteComponentToGameObject(mapSetting, map);
+                CommonTools.PasteComponentToGameObject(mapSetting, map);
             }
             else
             {
                 Debug.LogError(settingPath+ " 路径下不存在MapSetting配置");
             }
+
+            map.AddComponent<Map>();
         }
 
         public static List<T> GetAssets<T>(string path) where T : MonoBehaviour
@@ -46,12 +47,6 @@ namespace PetMaze
                     assetList.Add(temp);
             }
             return assetList;
-        }
-
-        public static void PasteComponentToGameObject(Component com , GameObject toGo)
-        {
-            UnityEditorInternal.ComponentUtility.CopyComponent(com);
-            UnityEditorInternal.ComponentUtility.PasteComponentAsNew(toGo);
         }
     }
 }

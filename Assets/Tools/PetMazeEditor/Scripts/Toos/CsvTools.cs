@@ -3,14 +3,19 @@ using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
+/// 注意点：表格key的顺序不能修改
 /// 参考 https://blog.csdn.net/eazey_wj/article/details/78821193
 /// </summary>
 namespace PetMaze
 {
-    public class CsvData
+    public class CsvTools
     {
+        public const int EventListCount = 5;
+        public const int RowOffset = 4;
+        public const int CellOffset = 1;
+
         #region 私有变量
-        private static CsvData _instance;
+        private static CsvTools _instance;
         #endregion
 
         #region 私有方法
@@ -32,22 +37,20 @@ namespace PetMaze
         }
         private string[] GetFileStr(Dictionary<int, List<string>> csvMap)
         {
-            string[] linesStr = new string[csvMap.Count];
-            for (int i = 0; i < csvMap.Count; i++){
-                linesStr[i] = "";
-                for (int j = 0;j < csvMap[i].Count; j++)
+            List<string> strs = new List<string>();
+            foreach(int key in csvMap.Keys)
+            {
+                string str = "";
+                string dian = "";
+                List<string> values = csvMap[key];
+                foreach(string s in values)
                 {
-                    if (j == 0)
-                    {
-                        linesStr[i] += csvMap[i][j];
-                    }
-                    else
-                    {
-                        linesStr[i] += "," + csvMap[i][j];
-                    }
+                    str += dian + s;
+                    dian = ",";
                 }
+                strs.Add(str);
             }
-            return linesStr;
+            return strs.ToArray();
         }
         private bool IsValid(int x, int y)
         {
@@ -60,12 +63,12 @@ namespace PetMaze
         #endregion
 
         #region 增删改存开
-        public static CsvData Instance
+        public static CsvTools Instance
         {
             get
             {
                 if (_instance == null)
-                    _instance = new CsvData();
+                    _instance = new CsvTools();
                 return _instance;
             }
         }
