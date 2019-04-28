@@ -19,12 +19,13 @@ namespace PetMaze
         #endregion
 
         #region 私有方法
-        private void FillAll(Dictionary<int, List<string>>  csvMap, string[] lines)
+        private void FillAll(Dictionary<string, List<string>>  csvMap, string[] lines)
         {
             for (int i = 0; i < lines.Length; i++)
             {
-                csvMap[i] = new List<string>();
-                FillOne(csvMap[i], lines[i]);
+                List<string> list = new List<string>();
+                FillOne(list, lines[i]);
+                csvMap[list[CellOffset]] = list;
             }
         }
         private void FillOne(List<string> fill, string s)
@@ -73,7 +74,7 @@ namespace PetMaze
             }
         }
 
-        public void FillCsv(Dictionary<int, List<string>> csvMap, string path)
+        public void FillCsv(Dictionary<string, List<string>> csvMap, string path)
         {
             if (!IsPathValid(path))
             {

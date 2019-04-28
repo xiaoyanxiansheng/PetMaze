@@ -63,38 +63,48 @@ namespace PetMaze
             Handles.BeginGUI();
             GUILayout.BeginArea(new Rect(10f, 10f, 100f, 1000f));
             OnSceneCheckBtn();
-            OnSceneCsvOpenBtn();
             OnSceneCsvSaveBtn();
-            OnSceneRefreshMapBtn();
+            // OnSceneRefreshMapBtn();
+            OnSceneLoadCsvBtn();
             GUILayout.EndArea();
             Handles.EndGUI();
         }
-
+        private void OnSceneLoadCsvBtn()
+        {
+            if (GUILayout.Button("LoadCsv"))
+            {
+                if (_target.MapEventSetting.Id == "")
+                {
+                    Debug.LogError("请先设置地图Id后再点击LoadCsv");
+                    return;
+                }
+                _target.ResetInitEventList();
+                Debug.Log("加载成功");
+            }
+        }
         private void OnSceneCheckBtn()
         {
             if (GUILayout.Button("检查配置文件是否合理"))
             {
-                if (MapSetting.Instance.TemplateCsvPath == "")
+                if (MapSetting.Instance.Path == "")
                 {
-                    Debug.LogError("Csv模板没有设置");
+                    Debug.LogError("路径没有设置");
                     return;
                 }
                 Debug.Log("配置检测通过");
-            }
-        }
-        private void OnSceneCsvOpenBtn()
-        {
-            if (GUILayout.Button("打开CSV文件"))
-            {
-                //CsvData.Instance.FillCsv(_target.MapEventTypeList, _target.SavePath);
             }
         }
         private void OnSceneCsvSaveBtn()
         {
             if (GUILayout.Button("保存CSV文件"))
             {
+                if (_target.MapEventSetting.Id == "")
+                {
+                    Debug.LogError("请先设置地图Id后再点击保存");
+                    return;
+                }
                 var list = _target.MapItemSetting.GetEventTrimList();
-                if (CsvTools.Instance.Save(list, _target.GetSavePath()))
+                if (CsvTools.Instance.Save(list, _target.GetSaveScvPath()))
                 {
                     Debug.Log("保存成功");
                     AssetDatabase.Refresh();

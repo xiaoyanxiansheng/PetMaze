@@ -12,8 +12,7 @@ namespace PetMaze
     [Serializable]
     public class MapEventSetting
     {
-        public string Id = "";
-        public string OpenPath = "";
+        public string Id = "Template";
         public int Width = 10;
         public int Height = 10;
         public string Theme = "";                                     // 主题   
@@ -68,9 +67,7 @@ namespace PetMaze
         #region 基本函数
         private void Awake()
         {
-            // 地块数据初始化
-            MapItemSetting.InitEventList(GetCsvPath());
-            MapItemSetting.CreateAllIns();
+            ResetInitEventList();
         }
 
         private void OnEnable()
@@ -152,6 +149,14 @@ namespace PetMaze
             Gizmos.DrawLine(startPos + new Vector3(0, halfDisHeight,0), startPos + new Vector3(disWidth, halfDisHeight, 0));
             Gizmos.DrawLine(startPos + new Vector3(halfDisWidth, 0, 0), startPos + new Vector3(halfDisWidth, disHeight, 0));
             Gizmos.color = oldColor;
+        }
+
+        public void ResetInitEventList()
+        {
+            MapItemSetting.DeleteAllIns();
+            // 地块数据初始化
+            MapItemSetting.InitEventList(GetOpenCsvPath());
+            MapItemSetting.CreateAllIns();
         }
         #endregion
 
@@ -268,21 +273,24 @@ namespace PetMaze
         {
             return MapItemSetting.GetEventItemPos(eventItem);
         }
-
-        public string GetCsvPath()
+        /// <summary>
+        /// Csv保存路径
+        /// </summary>
+        /// <returns></returns>
+        public string GetSaveScvPath()
         {
-            if (MapEventSetting.OpenPath != "")
-                return MapEventSetting.OpenPath;
-            return MapSetting.Instance.TemplateCsvPath;
+            string path = path = MapSetting.Instance.Path + MapEventSetting.Id + ".csv";
+            path = path.Replace('\\', '/');
+            return path;
         }
-
-        public string GetSavePath()
+        /// <summary>
+        /// csv的打开路劲
+        /// </summary>
+        /// <returns></returns>
+        public string GetOpenCsvPath()
         {
-            string path = "";
-
-            if (MapEventSetting.Id != "")
-                path = MapSetting.Instance.SavePath + MapEventSetting.Id + ".csv";
-
+            string path = path = MapSetting.Instance.Path + MapEventSetting.Id + ".csv";
+            path = path.Replace('\\', '/');
             return path;
         }
         #endregion

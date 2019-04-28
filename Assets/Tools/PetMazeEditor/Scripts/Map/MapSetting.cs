@@ -31,9 +31,7 @@ namespace PetMaze
     public class MapSetting : MonoBehaviour
     {
         #region 配置
-        // 默认模板
-        public string TemplateCsvPath = "D:/xyj/PetMazeEditor/PetMaze/Assets/Tools/PetMazeEditor/TestFile/MapTest1.csv";
-        public string SavePath = "D:/xyj/PetMazeEditor/PetMaze/Assets/Tools/PetMazeEditor/TestFile/";
+        public string Path = "D:/xyj/PetMazeEditor/PetMaze/Assets/Tools/PetMazeEditor/TestFile/";
         // 事件列表
         [SerializeField] private List<EventFatherInfo> _eventList = new List<EventFatherInfo>();
         // 主题列表

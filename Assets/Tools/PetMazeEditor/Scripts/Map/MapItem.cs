@@ -42,7 +42,8 @@ namespace PetMaze
                 Debug.LogError("打开文件不存在 " + path);
                 return;
             }
-            Dictionary<int, List<string>> csvData = new Dictionary<int, List<string>>();
+            EventList.Clear();
+            Dictionary<string, List<string>> csvData = new Dictionary<string, List<string>>();
             CsvTools.Instance.FillCsv(csvData, path);
             int width = Map.Instance.MapEventSetting.Width;
             int height = Map.Instance.MapEventSetting.Height;
@@ -55,11 +56,11 @@ namespace PetMaze
                     evetnItem.PointX = i;
                     evetnItem.PointY = j;
 
-                    int index = i * width + j + CsvTools.RowOffset;
-                    if (csvData.ContainsKey(index))
+                    int index = i * width + j + 1;
+                    if (csvData.ContainsKey(index.ToString()))
                     {
                         evetnItem.ValueList.Clear();
-                        List<string> eventInfo = csvData[index];
+                        List<string> eventInfo = csvData[index.ToString()];
                         for(int ei = 0; ei < CsvTools.EventListCount; ei++)
                         {
                             string eId = eventInfo[ei + CsvTools.CellOffset + 1];
@@ -73,9 +74,10 @@ namespace PetMaze
             }
             // key
             KeyList.Clear();
-            for (int i = 0; i < CsvTools.RowOffset; i++)
+            List<string> keys = new List<string> { "id", "ID", "int" };
+            foreach(string key in keys)
             {
-                KeyList.Add(csvData[i]);
+                KeyList.Add(csvData[key]);
             }
         }
         #endregion
@@ -103,7 +105,7 @@ namespace PetMaze
             GameObject ins = eventItem.Ins;
             toEventItem.ValueList = eventItem.ValueList;
             toEventItem.Ins = ins;
-            eventItem.ValueList.Clear();
+            eventItem.ValueList = new List<string>();
             eventItem.Ins = null;
 
             if (toEventItem.Ins != null)
@@ -181,7 +183,7 @@ namespace PetMaze
             spRender.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
             go.transform.localScale = new Vector3(200 / tex.width, 200 / tex.height, 1);
             go.transform.position = Map.Instance.GetWorldCoordinate(new Vector2(eventItem.PointX, eventItem.PointY));
-            go.transform.hideFlags = HideFlags.NotEditable;
+            go.transform.hideFlags = HideFlags.HideInHierarchy;
             go.transform.parent = Map.Instance.transform;
             eventItem.Ins = go;
             SetInsName(eventItem);
@@ -264,7 +266,7 @@ namespace PetMaze
             for (int i = 0; i < EventList.Count; i++)
             {
                 EventItem eventItem = EventList[i];
-                if (eventItem.ValueList.Count > 0)
+                if (eventItem.ValueList.Count > 0 && eventItem.Ins != null)
                 {
                     List<string> values = new List<string>();
                     values.Add("");
