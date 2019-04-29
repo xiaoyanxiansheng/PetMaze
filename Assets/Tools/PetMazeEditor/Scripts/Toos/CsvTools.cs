@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System;
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,11 +22,16 @@ namespace PetMaze
         #region 私有方法
         private void FillAll(Dictionary<string, List<string>>  csvMap, string[] lines)
         {
+            List<string> keys = GetKeys();
+            int keysVount = keys.Count;
             for (int i = 0; i < lines.Length; i++)
             {
                 List<string> list = new List<string>();
                 FillOne(list, lines[i]);
-                csvMap[list[CellOffset]] = list;
+                string index = list[CellOffset];
+                if (i < keysVount)
+                    index = keys[i];
+                csvMap[index] = list;
             }
         }
         private void FillOne(List<string> fill, string s)
@@ -36,10 +42,10 @@ namespace PetMaze
                 fill.Add(splitStr[j]);
             }
         }
-        private string[] GetFileStr(Dictionary<int, List<string>> csvMap)
+        private string[] GetFileStr(Dictionary<string, List<string>> csvMap)
         {
             List<string> strs = new List<string>();
-            foreach(int key in csvMap.Keys)
+            foreach(string key in csvMap.Keys)
             {
                 string str = "";
                 string dian = "";
@@ -90,7 +96,7 @@ namespace PetMaze
             FillAll(csvMap, lines);
         }
 
-        public bool Save(Dictionary<int, List<string>> csvMap, string path)
+        public bool Save(Dictionary<string, List<string>> csvMap, string path)
         {
             if (!IsPathValid(path))
             {
@@ -108,6 +114,19 @@ namespace PetMaze
             string[] fileStr = GetFileStr(csvMap);
             File.WriteAllLines(path, fileStr);
             return true;
+        }
+
+        public static List<string> GetKeys()
+        {
+            return new List<string>() { "-4","-3","-2","-1"};
+        }
+
+        public static List<string> InitLineData(List<string> data)
+        {
+            List<string> list = new List<string>();
+            list.Add("");
+            list.AddRange(data);
+            return list;
         }
         #endregion
 

@@ -1,0 +1,6 @@
+,id,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,ID,Size,Theme,IsFog,Weight,EventRandom1,EventRandom1Event1,EventRandom1Event2,EventRandom1Event3,EventRandom1Event4,EventRandom2,EventRandom2Event1,EventRandom2Event2,EventRandom2Event3,EventRandom2Event4,EventId1,EventParam1,EventMin1,EventMax1,EventId2,EventParam2,EventMin2,EventMax2,EventId3,EventParam3,EventMin3,EventMax3,EventId4,EventParam4,EventMin4,EventMax4,EventArea1Id1,EventArea1Param1,EventArea1Min1,EventArea1Max1,EventArea1Id2,EventArea1Param2,EventArea1Min2,EventArea1Max2,EventArea1Id3,EventArea1Param3,EventArea1Min3,EventArea1Max3,EventArea1Id4,EventArea1Param4,EventArea1Min4,EventArea1Max4
+,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int
+KEY,1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,100000,10,1,1,10,10,101,,,,10,101,102,,,101,1,1,1,,,,,,,,,,,,,101,1,1,1,,,,,,,,,,,,
+,100001,10,1,1,10,,,,,,,,,,,101,1,1,1,,,,,,,,,,,,,,,,,,,,,,,,,,,,

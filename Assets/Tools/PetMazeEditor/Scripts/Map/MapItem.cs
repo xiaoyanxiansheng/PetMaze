@@ -12,18 +12,26 @@ namespace PetMaze
     {
         public int PointX = 0;
         public int PointY = 0;
-        public List<string> ValueList = new List<string>();
+        public List<EventItemValue> ValueList = new List<EventItemValue>();
 
         public GameObject Ins;
     }
-
+    [Serializable]
+    public class EventItemValue
+    {
+        public string Name = "";
+        public string Id = "";
+        public string Param = "";
+    }
     [ExecuteInEditMode]
     [Serializable]
     public class MapItem
     {
         #region menber
-        public List<List<string>> KeyList = new List<List<string>>();
         public List<EventItem> EventList = new List<EventItem>();
+        public CsvData csvData;
+
+        private int _eventCount = 5;
         #endregion
 
         #region 数据层
@@ -43,8 +51,7 @@ namespace PetMaze
                 return;
             }
             EventList.Clear();
-            Dictionary<string, List<string>> csvData = new Dictionary<string, List<string>>();
-            CsvTools.Instance.FillCsv(csvData, path);
+            csvData = new CsvData(path);
             int width = Map.Instance.MapEventSetting.Width;
             int height = Map.Instance.MapEventSetting.Height;
             for (int i = 0; i < width; i++)
@@ -55,29 +62,20 @@ namespace PetMaze
                     EventList.Add(evetnItem);
                     evetnItem.PointX = i;
                     evetnItem.PointY = j;
-
                     int index = i * width + j + 1;
-                    if (csvData.ContainsKey(index.ToString()))
+                    for(int k = 0; k < _eventCount; k++)
                     {
-                        evetnItem.ValueList.Clear();
-                        List<string> eventInfo = csvData[index.ToString()];
-                        for(int ei = 0; ei < CsvTools.EventListCount; ei++)
+                        string EventId = csvData.GetValue(index.ToString(),"Event" + k);
+                        if (EventId != "")
                         {
-                            string eId = eventInfo[ei + CsvTools.CellOffset + 1];
-                            if (eId.Trim() != "")
-                            {
-                                evetnItem.ValueList.Add(eId);
-                            }
+                            EventItemValue itemValue = new EventItemValue();
+                            itemValue.Id = EventId;
+                            itemValue.Param = csvData.GetValue(index.ToString(), "Param" + k);
+                            itemValue.Name = MapSetting.Instance.GetEventName(itemValue.Id);
+                            evetnItem.ValueList.Add(itemValue);
                         }
                     }
                 }
-            }
-            // key
-            KeyList.Clear();
-            List<string> keys = new List<string> { "id", "ID", "int" };
-            foreach(string key in keys)
-            {
-                KeyList.Add(csvData[key]);
             }
         }
         #endregion
@@ -105,7 +103,7 @@ namespace PetMaze
             GameObject ins = eventItem.Ins;
             toEventItem.ValueList = eventItem.ValueList;
             toEventItem.Ins = ins;
-            eventItem.ValueList = new List<string>();
+            eventItem.ValueList = new List<EventItemValue>();
             eventItem.Ins = null;
 
             if (toEventItem.Ins != null)
@@ -148,16 +146,9 @@ namespace PetMaze
         public void AddEventList(EventItem eventItem,string id)
         {
             if (eventItem == null) return;
-            int addIndex = 0;
-            for(int i = 0; i < eventItem.ValueList.Count; i++)
-            {
-                if (eventItem.ValueList[i].Trim() == "")
-                {
-                    addIndex = i;
-                    break;
-                }
-            }
-            eventItem.ValueList.Add(id);
+            EventItemValue item = new EventItemValue();
+            item.Id = id;
+            eventItem.ValueList.Add(item);
         }
         public void AddIns(EventItem eventItem, string id)
         {
@@ -167,10 +158,12 @@ namespace PetMaze
         public void CreateIns(EventItem eventItem)
         {
             if (eventItem == null) return;
-            List<string> eventList = eventItem.ValueList;
+            List<EventItemValue> eventList = eventItem.ValueList;
             if (eventList == null || eventList.Count == 0) return;
 
-            string eventId = eventList[0];
+            string eventId = eventList[0].Id;
+            if (eventId == "")
+                return;
             EventInfo eventInfo = MapSetting.Instance.GetEventInfo(eventId);
             if (eventInfo == null)
             {
@@ -248,16 +241,13 @@ namespace PetMaze
         /// 得到去零的数据 为了节约内存
         /// </summary>
         /// <returns></returns>
-        public Dictionary<int,List<string>> GetEventTrimList()
+        public Dictionary<string,List<string>> GetEventTrimList()
         {
-            Dictionary<int, List<string>> eventTrimList = new Dictionary<int, List<string>>();
+            Dictionary<string, List<string>> eventTrimList = new Dictionary<string, List<string>>();
 
             // 加入key
-            int lineCount = KeyList[0].Count;
-            for(int i = 0; i < KeyList.Count; i++)
-            {
-                eventTrimList[i] = KeyList[i];
-            }
+            csvData.FillKeys(eventTrimList);
+            // 加入
 
             int index = eventTrimList.Count;
             int width = Map.Instance.MapEventSetting.Width;
@@ -271,15 +261,16 @@ namespace PetMaze
                     List<string> values = new List<string>();
                     values.Add("");
                     values.Add((eventItem.PointX * width + eventItem.PointY + 1).ToString());
-                    foreach(string v in eventItem.ValueList)
+                    foreach(EventItemValue v in eventItem.ValueList)
                     {
-                        values.Add(v);
+                        values.Add(v.Id);
+                        values.Add(v.Param);
                     }
                     for(int j = values.Count;j< lineCount; j++)
                     {
                         values.Add("");
                     }
-                    eventTrimList[index] = values;
+                    eventTrimList[index.ToString()] = values;
                     index++;
                 }
             }

@@ -22,6 +22,7 @@ namespace PetMaze
             if (mapSetting != null)
             {
                 CommonTools.PasteComponentToGameObject(mapSetting, map);
+                mapSetting.hideFlags = HideFlags.HideAndDontSave;
             }
             else
             {

@@ -8,9 +8,9 @@ namespace PetMaze
     public class MapItemCom : MonoBehaviour
     {
 
-        public List<string> ValueList = new List<string>();
+        public List<EventItemValue> ValueList = new List<EventItemValue>();
 
-        public void InitValues(List<string> values)
+        public void InitValues(List<EventItemValue> values)
         {
             ValueList = values;
         }
@@ -26,11 +26,13 @@ namespace PetMaze
             if (Selection.activeGameObject == null || Selection.activeGameObject != gameObject)
                 return;
             Color oldColor = Gizmos.color;
-            Gizmos.color = new Color(0.5f, 0.5f, 0.5f);
+            Gizmos.color = new Color(1, 0.62f, 0.14f);
             float halfCellSize = Map.GridCellSize * 0.5f;
             Vector3 pos = transform.position;
-            Gizmos.DrawLine(pos + new Vector3(-halfCellSize, -halfCellSize, 0), pos + new Vector3(halfCellSize, halfCellSize, 0));
-            Gizmos.DrawLine(pos + new Vector3(-halfCellSize, halfCellSize, 0), pos + new Vector3(halfCellSize, -halfCellSize, 0));
+            Gizmos.DrawLine(pos + new Vector3(-halfCellSize, -halfCellSize, 0), pos + new Vector3(halfCellSize, -halfCellSize, 0));
+            Gizmos.DrawLine(pos + new Vector3(halfCellSize, -halfCellSize, 0), pos + new Vector3(halfCellSize, halfCellSize, 0));
+            Gizmos.DrawLine(pos + new Vector3(halfCellSize, halfCellSize, 0), pos + new Vector3(-halfCellSize, halfCellSize, 0));
+            Gizmos.DrawLine(pos + new Vector3(-halfCellSize, halfCellSize, 0), pos + new Vector3(-halfCellSize, -halfCellSize, 0));
             Gizmos.color = oldColor;
         }
     }

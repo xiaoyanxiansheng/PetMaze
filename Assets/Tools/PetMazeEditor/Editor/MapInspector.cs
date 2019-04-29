@@ -19,6 +19,8 @@ namespace PetMaze
         private EventItem _dragEvent = null;
         private Vector3 _mouseDownPos = Vector3.zero;
         private Vector3 _mouseUpPos = Vector3.zero;
+        private string[] _selectModels = new string[] { "绘制模式" , "编辑模式"};
+        private int _selectModel = 0;
         #endregion
 
         #region 基本函数
@@ -49,8 +51,8 @@ namespace PetMaze
         {
             EditorGUILayout.LabelField("地图属性", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
-            _target.MapEventSetting.Height = EditorGUILayout.IntField("行", Math.Max(0, _target.MapEventSetting.Height));
-            _target.MapEventSetting.Width = EditorGUILayout.IntField("列", Math.Max(0, _target.MapEventSetting.Width));
+            _target.MapEventSetting.Size = EditorGUILayout.IntField("行", Math.Max(0, _target.MapEventSetting.Height));
+            _target.MapEventSetting.Size = EditorGUILayout.IntField("列", Math.Max(0, _target.MapEventSetting.Width));
             EditorGUILayout.EndHorizontal();
         }
         #endregion
@@ -62,6 +64,7 @@ namespace PetMaze
             EventHandleHand();
             Handles.BeginGUI();
             GUILayout.BeginArea(new Rect(10f, 10f, 100f, 1000f));
+            OnSceneModelToggle();
             OnSceneCheckBtn();
             OnSceneCsvSaveBtn();
             // OnSceneRefreshMapBtn();
@@ -103,8 +106,8 @@ namespace PetMaze
                     Debug.LogError("请先设置地图Id后再点击保存");
                     return;
                 }
-                var list = _target.MapItemSetting.GetEventTrimList();
-                if (CsvTools.Instance.Save(list, _target.GetSaveScvPath()))
+                // 保存文件
+                if (_target.SaveFiles())
                 {
                     Debug.Log("保存成功");
                     AssetDatabase.Refresh();
@@ -123,6 +126,10 @@ namespace PetMaze
                 Repaint();
             }
         }
+        private void OnSceneModelToggle()
+        {
+
+        }
         #region 事件相关
         private void EventHandleSetting()
         {
@@ -138,10 +145,12 @@ namespace PetMaze
             mousePosition.y = camera.pixelHeight - mousePosition.y;
             Vector3 wroldPosition = camera.ScreenToWorldPoint(mousePosition);
             Vector2 coordinate = Map.Instance.GetMapCoordinate(wroldPosition);
+            int pointx = (int)coordinate.x;
+            int pointy = (int)coordinate.y;
             EventType eventType = Event.current.type;
             if (eventType == EventType.MouseDown)
             {
-                EventItem eventItem = _target.GetEventItem((int)coordinate.x, (int)coordinate.y);
+                EventItem eventItem = _target.GetEventItem(pointx, pointy);
                 int buttonIndex = Event.current.button;
                 if (buttonIndex == 0)
                 {
@@ -164,13 +173,20 @@ namespace PetMaze
             }
             else if (eventType == EventType.MouseUp)
             {
-                if (_dragEvent != null) _dragEvent = null;
+                if (_dragEvent != null)
+                {
+                    //if (_dragEvent.PointX == pointx && _dragEvent.PointY == pointy)
+                    //{
+                    //    ClickEditor(_dragEvent);
+                    //}
+                    _dragEvent = null;
+                }
             }
             else if (eventType == EventType.MouseDrag)
             {
                 if (_dragEvent != null && _dragEvent.Ins != null)
                 {
-                    EventItem toEventItem = _target.GetEventItem((int)coordinate.x, (int)coordinate.y);
+                    EventItem toEventItem = _target.GetEventItem(pointx, pointy);
                     if (_target.MapItemSetting.MoveIns(_dragEvent, toEventItem))
                         _dragEvent = toEventItem;
                 }

@@ -11,7 +11,7 @@ namespace PetMaze
         private Dictionary<int , List<EventInfo>> _eventMap;
         private int _selectTab = 0;
         private EventInfo _selectEventInfo;
-        private int ItemWidth = 60;
+        private int ItemWidth = 80;
         private Vector2 _scrollViewPosition = Vector2.zero;
 
         public delegate void SelectEventIdCall(EventInfo eventInfo);
@@ -119,7 +119,7 @@ namespace PetMaze
             for(int i = 0; i < eventList.Count; i++)
             {
                 GUIContent content = new GUIContent();
-                content.text = eventList[i].name;
+                content.text = eventList[i].name+"("+ eventList[i] .id+ ")";
                 content.image = eventList[i].icon;
                 contentList.Add(content);
             }
