@@ -362,8 +362,7 @@ namespace PetMaze
         /// <returns></returns>
         public bool SaveFilesEvent()
         {
-            var list = MapItemSetting.GetEventTrimList();
-            return CsvTools.Instance.Save(list, GetSaveScvPath());
+            return MapItemSetting.SaveCsv(GetSaveScvPath());
         }
         /// <summary>
         /// 保存区域文件

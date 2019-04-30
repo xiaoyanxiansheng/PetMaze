@@ -16,13 +16,14 @@ namespace PetMaze
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene);
             RenderSettings.skybox = null;
             GameObject map = new GameObject("map");
-
+            Selection.activeGameObject = map;
             string settingPath = "Assets/Tools/PetMazeEditor/Prefabs/MapSetting.prefab";
             MapSetting mapSetting = AssetDatabase.LoadAssetAtPath<MapSetting>(settingPath);
             if (mapSetting != null)
             {
-                CommonTools.PasteComponentToGameObject(mapSetting, map);
-                mapSetting.hideFlags = HideFlags.HideAndDontSave;
+                GameObject mapSettingGo = new GameObject("MapSetting");
+                CommonTools.PasteComponentToGameObject(mapSetting, mapSettingGo);
+                mapSettingGo.hideFlags = HideFlags.HideInHierarchy;
             }
             else
             {

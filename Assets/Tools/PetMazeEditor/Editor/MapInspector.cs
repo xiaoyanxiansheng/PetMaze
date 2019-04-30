@@ -64,17 +64,41 @@ namespace PetMaze
             EventHandleHand();
             Handles.BeginGUI();
             GUILayout.BeginArea(new Rect(10f, 10f, 100f, 1000f));
-            OnSceneModelToggle();
-            OnSceneCheckBtn();
+            OnSceneDeleteBtn();
+            GUILayout.Space(10);
+            //OnSceneCheckBtn();
+            GUILayout.Space(10);
             OnSceneCsvSaveBtn();
-            // OnSceneRefreshMapBtn();
             OnSceneLoadCsvBtn();
             GUILayout.EndArea();
             Handles.EndGUI();
         }
+        private void OnSceneDeleteBtn()
+        {
+            if (GUILayout.Button("清空"))
+            {
+                if (EditorUtility.DisplayDialog("确认", "是否清空?", "ok","cancel"))
+                {
+                    _target.MapItemSetting.DeleteAllIns();
+                    Repaint();
+                }
+            }
+        }
+        private void OnSceneCheckBtn()
+        {
+            if (GUILayout.Button("检查"))
+            {
+                if (MapSetting.Instance.Path == "")
+                {
+                    Debug.LogError("保存路径没有设置");
+                    return;
+                }
+                Debug.Log("配置检测通过");
+            }
+        }
         private void OnSceneLoadCsvBtn()
         {
-            if (GUILayout.Button("LoadCsv"))
+            if (GUILayout.Button("Csv加载"))
             {
                 if (_target.MapEventSetting.Id == "")
                 {
@@ -85,21 +109,10 @@ namespace PetMaze
                 Debug.Log("加载成功");
             }
         }
-        private void OnSceneCheckBtn()
-        {
-            if (GUILayout.Button("检查配置文件是否合理"))
-            {
-                if (MapSetting.Instance.Path == "")
-                {
-                    Debug.LogError("路径没有设置");
-                    return;
-                }
-                Debug.Log("配置检测通过");
-            }
-        }
+        
         private void OnSceneCsvSaveBtn()
         {
-            if (GUILayout.Button("保存CSV文件"))
+            if (GUILayout.Button("CSV保存"))
             {
                 if (_target.MapEventSetting.Id == "")
                 {
@@ -117,18 +130,6 @@ namespace PetMaze
                     Debug.LogError("保存失败");
                 }
             }
-        }
-        private void OnSceneRefreshMapBtn()
-        {
-            if (GUILayout.Button("刷新整个地图"))
-            {
-                ResetAllIns();
-                Repaint();
-            }
-        }
-        private void OnSceneModelToggle()
-        {
-
         }
         #region 事件相关
         private void EventHandleSetting()

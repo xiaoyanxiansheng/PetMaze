@@ -13,12 +13,21 @@ namespace PetMaze {
             keys = data["-3"];
         }
 
-        public void FillKeys(Dictionary<string, List<string>> table)
+        public void Clear()
         {
-            string[] ks = new string[] { "-4","-1","-2","-1"};
-            for(int i=0;i< ks.Length; i++)
+            // 获取表头
+            List<string> titleKeys = new List<string>() { "-4", "-3", "-2", "-1" };
+            Dictionary<string, List<string>> titleDic = new Dictionary<string, List<string>>();
+            foreach(string titleKey in titleKeys)
             {
-                table[i.ToString()] = data[ks[i]];
+                titleDic[titleKey] = data[titleKey];
+            }
+            // 清空数据
+            data.Clear();
+            // 加入表头
+            foreach(string titleKey in titleDic.Keys)
+            {
+                data[titleKey] = titleDic[titleKey];
             }
         }
 

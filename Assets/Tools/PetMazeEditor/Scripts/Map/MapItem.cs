@@ -238,44 +238,32 @@ namespace PetMaze
             eventItem.Ins.name = eventItem.PointX + "X" + eventItem.PointY;
         }
         /// <summary>
-        /// 得到去零的数据 为了节约内存
+        /// 保存csv对象
         /// </summary>
         /// <returns></returns>
-        public Dictionary<string,List<string>> GetEventTrimList()
+        public bool SaveCsv(string path)
         {
-            Dictionary<string, List<string>> eventTrimList = new Dictionary<string, List<string>>();
-
-            // 加入key
-            csvData.FillKeys(eventTrimList);
-            // 加入
-
-            int index = eventTrimList.Count;
+            csvData.Clear();
             int width = Map.Instance.MapEventSetting.Width;
             int height = Map.Instance.MapEventSetting.Height;
             // 加入数据
-            for (int i = 0; i < EventList.Count; i++)
+            foreach(EventItem eventItem in EventList)
             {
-                EventItem eventItem = EventList[i];
-                if (eventItem.ValueList.Count > 0 && eventItem.Ins != null)
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic["ID"] = (eventItem.PointX * width + eventItem.PointY + 1).ToString();
+                for(int i = 0; i < eventItem.ValueList.Count; i++)
                 {
-                    List<string> values = new List<string>();
-                    values.Add("");
-                    values.Add((eventItem.PointX * width + eventItem.PointY + 1).ToString());
-                    foreach(EventItemValue v in eventItem.ValueList)
-                    {
-                        values.Add(v.Id);
-                        values.Add(v.Param);
-                    }
-                    for(int j = values.Count;j< lineCount; j++)
-                    {
-                        values.Add("");
-                    }
-                    eventTrimList[index.ToString()] = values;
-                    index++;
+                    int index = i + 1;
+                    dic["Event" + index] = eventItem.ValueList[i].Id;
+                    dic["Param" + index] = eventItem.ValueList[i].Param;
+                }
+                // 如果第一个事件都不存在就不要写入表中了 节约内存
+                if (dic.ContainsKey("Event1") && dic["Event1"] != "")
+                {
+                    csvData.Modify(dic);
                 }
             }
-
-            return eventTrimList;
+            return CsvTools.Instance.Save(csvData.data, path);
         }
         #endregion
     }

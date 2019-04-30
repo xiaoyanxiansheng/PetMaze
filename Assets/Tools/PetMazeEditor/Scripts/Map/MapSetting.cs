@@ -38,8 +38,6 @@ namespace PetMaze
         
         // 事件列表
         [SerializeField] private List<EventFatherInfo> _eventList = new List<EventFatherInfo>();
-        // 主题列表
-        [SerializeField] private List<ThemeInfo> _themeList = new List<ThemeInfo>();
         #endregion
 
         #region 初始化相关
@@ -56,36 +54,6 @@ namespace PetMaze
         }
 
         public List<EventFatherInfo> EventList { get { return _eventList; } set { _eventList = value; } }
-        #endregion
-
-        #region 主题相关
-        public ThemeInfo GetDefaultTheme()
-        {
-            return GetTheme(0);
-        }
-        public ThemeInfo GetTheme(int index)
-        {
-            if (index > _themeList.Count)
-            {
-                return null;
-            }
-            return _themeList[index];
-        }
-        public List<ThemeInfo> GetThemeList()
-        {
-            return _themeList;
-        }
-        public List<string> GetThemeNameList()
-        {
-            List<string> themeNameList = new List<string>();
-
-            for (int i = 0; i < _themeList.Count; i++)
-            {
-                themeNameList.Add(_themeList[i].name);
-            }
-
-            return themeNameList;
-        }
         #endregion
 
         #region 事件相关

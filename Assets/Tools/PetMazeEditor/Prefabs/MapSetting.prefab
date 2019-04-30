@@ -31,7 +31,7 @@ Transform:
   m_RootOrder: 0
 --- !u!114 &11405144
 MonoBehaviour:
-  m_ObjectHideFlags: 61
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 133796}
@@ -63,7 +63,24 @@ MonoBehaviour:
     - name: "\u94A5\u53192"
       id: 202
       icon: {fileID: 10912, guid: 0000000000000000f000000000000000, type: 0}
-  _themeList: []
+  - name: "\u94A5\u5319"
+    id: 2
+    eventList:
+    - name: "\u94A5\u53191"
+      id: 201
+      icon: {fileID: 10912, guid: 0000000000000000f000000000000000, type: 0}
+    - name: "\u94A5\u53192"
+      id: 202
+      icon: {fileID: 10912, guid: 0000000000000000f000000000000000, type: 0}
+  - name: "\u94A5\u5319"
+    id: 2
+    eventList:
+    - name: "\u94A5\u53191"
+      id: 201
+      icon: {fileID: 10912, guid: 0000000000000000f000000000000000, type: 0}
+    - name: "\u94A5\u53192"
+      id: 202
+      icon: {fileID: 10912, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
