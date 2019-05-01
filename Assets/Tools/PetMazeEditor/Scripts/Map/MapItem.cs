@@ -174,8 +174,16 @@ namespace PetMaze
             Texture2D tex = eventInfo.icon;
             if (tex == null)
             {
+                tex = new Texture2D(100, 100, TextureFormat.ARGB32, false);
+                for (int i = 0; i < 100; i++)
+                {
+                    for(int j = 0; j < 100; j++)
+                    {
+                        tex.SetPixel(i, j, new Color(0, 0, 0, 1));
+                    }
+                }
+                tex.Apply(false);
                 Debug.LogError("没有设置图片 类型: " + eventId);
-                return;
             }
             GameObject go = new GameObject();
             SpriteRenderer spRender = go.AddComponent<SpriteRenderer>();

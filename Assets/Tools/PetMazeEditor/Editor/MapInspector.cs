@@ -106,8 +106,8 @@ namespace PetMaze
             GUILayout.Space(10);
             //OnSceneCheckBtn();
             GUILayout.Space(10);
-            OnSceneCsvSaveBtn();
             OnSceneLoadCsvBtn();
+            OnSceneCsvSaveBtn();
             GUILayout.EndArea();
             Handles.EndGUI();
         }
@@ -161,6 +161,7 @@ namespace PetMaze
                 if (_target.SaveFiles())
                 {
                     Debug.Log("保存成功");
+                    _target.ResetInitEventList();
                     AssetDatabase.Refresh();
                 }
                 else
@@ -202,7 +203,13 @@ namespace PetMaze
                             Repaint();
                         }
                         else
+                        {
                             Debug.LogError("请先选择一个事件");
+                            if (EditorUtility.DisplayDialog("错误", "请选选择一个事件", "ok", "cancle"))
+                            {
+                                MenuItems.OpenEventWindow();
+                            }
+                        }
                     }
                 }
                 else if (buttonIndex == 1)
