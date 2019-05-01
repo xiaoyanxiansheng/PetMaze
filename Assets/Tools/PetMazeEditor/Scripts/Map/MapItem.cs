@@ -171,9 +171,14 @@ namespace PetMaze
                 Debug.LogError("本地配置和表格配置不匹配 错误事件Id: " + eventId);
                 return;
             }
+            Texture2D tex = eventInfo.icon;
+            if (tex == null)
+            {
+                Debug.LogError("没有设置图片 类型: " + eventId);
+                return;
+            }
             GameObject go = new GameObject();
             SpriteRenderer spRender = go.AddComponent<SpriteRenderer>();
-            Texture2D tex = eventInfo.icon;
             spRender.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
             go.transform.localScale = new Vector3(200 / tex.width, 200 / tex.height, 1);
             go.transform.position = Map.Instance.GetWorldCoordinate(new Vector2(eventItem.PointX, eventItem.PointY));
