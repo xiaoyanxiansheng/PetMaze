@@ -1,0 +1,8 @@
+,id,枚举,行动力消耗,行走权重,掉落权重,掉落参数,事件步骤包1,事件步骤包2,事件步骤包3,事件步骤包4,事件步骤包5,条件参数1,条件参数2,条件数值,提示,出身特效持续时间,出身特效,持续特效时间,持续特效,消失特效持续时间,消失特效,互动人物特效持续时间,互动人物特效,出现音效,互动音效
+,ID,type,action,weight,random_weight,random_parameter,event1,event2,event3,event4,event5,condition_parameter1,condition_parameter2,condition_mount,tips,fx_birth_time,fx_birth_1,fx_continue_time,fx_continue_1,fx_interact_time,fx_interact_1,fx_interactrole_time,fx_interactrole_1,sound1,sound2
+,int,int,int,int,int,int,int,int,int,int,int,int,int,int,string,float,string,float,string,float,string,float,string,string,string
+KEY,1,,,,,,,,,,,,,,,,,,,,,,,,
+,1,0,1,5,10,,,,,,,,,,,,,,,,,,,,
+,2,1,,5,10,,,,,,,,,,,1,scene/particle/pref/maze_forest_01/fx_maze_update,0,,1,,1,,,
+,3,2,2,50,10,801081000,851095000,,,,,,,,,1,scene/particle/pref/maze_forest_01/fx_maze_special_battle_birth,0,,1,scene/particle/pref/maze_forest_01/fx_maze_special_battle_death,1,,event:/UI/ui_maze_stone,
+,4,,,,,,,,,,,,,,,,,,,,,,,,

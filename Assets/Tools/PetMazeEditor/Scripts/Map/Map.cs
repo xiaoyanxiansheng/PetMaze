@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine.UI;
 /// <summary>
 /// http://www.360doc.com/content/18/0803/14/22877383_775399366.shtml
+/// https://blog.csdn.net/tom_221x/article/details/79437561
 /// </summary>
 namespace PetMaze
 {
@@ -128,9 +129,29 @@ namespace PetMaze
         }
         private void OnValidate()
         {
-            // ResetInitEventList();
+            RefreshNames();
         }
-
+        private void RefreshNames()
+        {
+            foreach(EventRange eventItem in MapEventSetting.RangeEventList)
+            {
+                eventItem.Name = MapSetting.Instance.GetEventName(eventItem.Id);
+            }
+            foreach (EventRandom eventRandom in MapEventSetting.RandomEventList)
+            {
+                foreach(EventRandomItem eventRandomItem in eventRandom.EventList)
+                {
+                    eventRandomItem.Name = MapSetting.Instance.GetEventName(eventRandomItem.Id);
+                }
+            }
+            foreach(AreaEventItemSetting areaSetting in AreaEventSetting.AreaItems)
+            {
+                foreach(EventRange eventRange in areaSetting.RangeEventList)
+                {
+                    eventRange.Name = MapSetting.Instance.GetEventName(eventRange.Id);
+                }
+            }
+        }
         /// <summary>
         /// 绘制gizmos
         /// </summary>

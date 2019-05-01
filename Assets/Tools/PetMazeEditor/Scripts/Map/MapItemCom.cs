@@ -12,12 +12,16 @@ namespace PetMaze
 
         public void InitValues(List<EventItemValue> values)
         {
+            foreach(EventItemValue item in values)
+            {
+                item.Name = MapSetting.Instance.GetEventName(item.Id);
+            }
             ValueList = values;
         }
 
         void OnValidate()
         {
-            Debug.Log(" OnValidate");
+            InitValues(ValueList);
         }
 
         void OnDrawGizmosSelected()

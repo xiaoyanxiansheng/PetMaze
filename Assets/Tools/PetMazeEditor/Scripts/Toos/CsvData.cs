@@ -4,6 +4,7 @@ using UnityEngine;
 namespace PetMaze {
     public class CsvData
     {
+        List<string> titleKeys = new List<string>() { "-4", "-3", "-2", "-1" };
         public List<string> keys = new List<string>();
         public Dictionary<string, List<string>> data = new Dictionary<string, List<string>>();
 
@@ -15,8 +16,6 @@ namespace PetMaze {
 
         public void Clear()
         {
-            // 获取表头
-            List<string> titleKeys = new List<string>() { "-4", "-3", "-2", "-1" };
             Dictionary<string, List<string>> titleDic = new Dictionary<string, List<string>>();
             foreach(string titleKey in titleKeys)
             {
@@ -60,6 +59,25 @@ namespace PetMaze {
         }
 
         /// <summary>
+        /// 获取主键列表
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetMainKeyList(string keyId = "ID")
+        {
+            List<string> mainKeyList = new List<string>();
+
+            foreach(string key in data.Keys)
+            {
+                if (IsKey(key))
+                {
+                    mainKeyList.Add(GetValue(key, keyId));
+                }
+            }
+
+            return mainKeyList;
+        }
+
+        /// <summary>
         /// 存在就修改 不存在就加入
         /// </summary>
         /// <param name="key"></param>
@@ -88,6 +106,12 @@ namespace PetMaze {
             }
 
             return isExist;
+        }
+
+        public bool IsKey(string key)
+        {
+            int index = CommonTools.GetStrTableIndex(titleKeys, key);
+            return index == -1;
         }
     }
 }

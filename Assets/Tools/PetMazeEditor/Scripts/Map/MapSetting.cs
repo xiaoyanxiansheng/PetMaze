@@ -19,6 +19,7 @@ namespace PetMaze
     {
         public string name;
         public string id;
+        // 大小根据表格指定不能手动更改大小
         public List<EventInfo> eventList = new List<EventInfo>();
     }
     [Serializable]
@@ -33,7 +34,8 @@ namespace PetMaze
         #region 配置
         public static string MazeTemplateEventId = "100000";
         public static string MazeMapCsvName = "MazeMap";
-        public static string MazeAreaCsvName = "MazeArae";
+        public static string MazeThemeCsvName = "MazeTheme";
+        public static string MazeElement = "MazeElement";
         public string Path = "D:/xyj/PetMazeEditor/PetMaze/Assets/Tools/PetMazeEditor/TestFile/";
         
         // 事件列表
@@ -54,6 +56,47 @@ namespace PetMaze
         }
 
         public List<EventFatherInfo> EventList { get { return _eventList; } set { _eventList = value; } }
+
+        [ContextMenu("InitData")]
+        public void InitData()
+        {
+            CsvData csvData = new CsvData(GetMapElementPath());
+            List<string> mainKeyList = csvData.GetMainKeyList();
+            Dictionary<string, EventFatherInfo> fatherEventList = new Dictionary<string, EventFatherInfo>();
+            foreach (string id in mainKeyList)
+            {
+                string fatherId = csvData.GetValue(id, "type");
+                // 填充father信息
+                if (!fatherEventList.ContainsKey(fatherId))
+                {
+                    EventFatherInfo tempFatherInfo = new EventFatherInfo();
+                    tempFatherInfo.id = fatherId;
+                    EventFatherInfo setFatherInfo = GetEventFatherInfo(fatherId);
+                    if (setFatherInfo != null)
+                    {
+                        tempFatherInfo.name = setFatherInfo.name;
+                    }
+                    fatherEventList[fatherId] = tempFatherInfo;
+                    fatherEventList[fatherId].eventList = new List<EventInfo>();
+                }
+
+                // 填充eventList信息
+                EventInfo tempEventInfo = new EventInfo();
+                tempEventInfo.id = id;
+                EventInfo setEventInfo = GetEventInfo(fatherId, id);
+                if (setEventInfo != null)
+                {
+                    tempEventInfo.name = setEventInfo.name;
+                    tempEventInfo.icon = setEventInfo.icon;
+                }
+                fatherEventList[fatherId].eventList.Add(tempEventInfo);
+            }
+            _eventList.Clear();
+            foreach(EventFatherInfo fInfo in fatherEventList.Values)
+            {
+                _eventList.Add(fInfo);
+            }
+        }
         #endregion
 
         #region 事件相关
@@ -76,28 +119,35 @@ namespace PetMaze
             return eventInfos;
         }
 
-        public List<EventInfo> GetEventList(string fatherId)
+        public EventFatherInfo GetEventFatherInfo(string fatherId)
         {
-            List<EventInfo> eventInfos = new List<EventInfo>();
+            EventFatherInfo fatherInfo = null;
 
             for (int i = 0; i < _eventList.Count; i++)
             {
                 if (_eventList[i].id == fatherId)
                 {
-                    for (int j = 0; j < _eventList[i].eventList.Count; j++)
-                    {
-                        EventInfo eventInfo = _eventList[i].eventList[j];
-                        if (!eventInfos.Contains(eventInfo))
-                        {
-                            eventInfos.Add(eventInfo);
-                        }
-                    }
+                    fatherInfo = _eventList[i];
                 }
             }
 
-            return eventInfos;
+            return fatherInfo;
         }
-
+        public EventInfo GetEventInfo(string fatherId,string eventId)
+        {
+            EventFatherInfo fatherInfo = GetEventFatherInfo(fatherId);
+            if (fatherInfo != null)
+            {
+                foreach (EventInfo eInfo in fatherInfo.eventList)
+                {
+                    if (eInfo.id == eventId)
+                    {
+                        return eInfo;
+                    }
+                }
+            }
+            return null;
+        }
         public List<string> GetEventFatherNameList()
         {
             List<string> nameList = new List<string>();
@@ -154,6 +204,14 @@ namespace PetMaze
         public string GetMapCsvPath()
         {
             return Path + MazeMapCsvName + ".csv";
+        }
+        public string GetMapElementPath()
+        {
+            return Path + MazeElement + ".csv";
+        }
+        public string GetMapThemePath()
+        {
+            return Path + MazeThemeCsvName + ".csv";
         }
         #endregion
     }

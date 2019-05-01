@@ -148,6 +148,7 @@ namespace PetMaze
             if (eventItem == null) return;
             EventItemValue item = new EventItemValue();
             item.Id = id;
+            item.Name = MapSetting.Instance.GetEventName(id);
             eventItem.ValueList.Add(item);
         }
         public void AddIns(EventItem eventItem, string id)

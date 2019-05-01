@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.AnimatedValues;
 
 /// <summary>
 /// TODO 刷新模式修改 根据数据刷新
@@ -14,13 +15,11 @@ namespace PetMaze
     {
         #region menber
         private Map _target;
-
         // 事件相关
         private EventItem _dragEvent = null;
-        private Vector3 _mouseDownPos = Vector3.zero;
-        private Vector3 _mouseUpPos = Vector3.zero;
-        private string[] _selectModels = new string[] { "绘制模式" , "编辑模式"};
-        private int _selectModel = 0;
+        // 动画相关
+        private AnimBool fadeGroup1;
+        private AnimBool fadeGroup2;
         #endregion
 
         #region 基本函数
@@ -32,6 +31,9 @@ namespace PetMaze
         {
             EventWindow.DSelectEventIdCall += UpdateSelectEventInfo;
             _target.transform.hideFlags = HideFlags.NotEditable;
+
+            // fadeGroup1 = new AnimBool(true);
+            // fadeGroup1.valueChanged.AddListener(Repaint);
         }
         private void OnDisable()
         {
@@ -41,19 +43,55 @@ namespace PetMaze
 
         #region 绘制
         #region 绘制属性
-        //public override void OnInspectorGUI()
-        //{
-        //    EditorGUILayout.HelpBox("保存成功", MessageType.Info);
-        //    // 绘制地图属性
-        //    DrawMap();
-        //}
+        public override void OnInspectorGUI()
+        {
+            // 绘制地图属性
+            DrawMap();
+        }
         public void DrawMap()
         {
-            EditorGUILayout.LabelField("地图属性", EditorStyles.boldLabel);
-            EditorGUILayout.BeginVertical("box");
-            _target.MapEventSetting.Size = EditorGUILayout.IntField("行", Math.Max(0, _target.MapEventSetting.Height));
-            _target.MapEventSetting.Size = EditorGUILayout.IntField("列", Math.Max(0, _target.MapEventSetting.Width));
-            EditorGUILayout.EndHorizontal();
+            base.DrawDefaultInspector();
+
+            // EditorGUILayout.PropertyField(serializedObject.FindProperty("MapEventSetting.Theme"));
+            //EditorGUILayout.LabelField("地图属性", EditorStyles.boldLabel);
+            //EditorGUILayout.BeginVertical("box");
+            //_target.MapEventSetting.Size = EditorGUILayout.IntField("行", Math.Max(0, _target.MapEventSetting.Height));
+            //_target.MapEventSetting.Size = EditorGUILayout.IntField("列", Math.Max(0, _target.MapEventSetting.Width));
+            //EditorGUILayout.EndHorizontal();
+            //GUIContent conten = new GUIContent();
+            //conten.text = "aaa";
+            //GUILayoutOption[] options = new GUILayoutOption[4];
+            //options[0] = new GUILayoutOption();
+            //EditorGUILayout.DropdownButton(conten,FocusType.Keyboard);
+
+
+            /*if (EditorGUILayout.PropertyField(eventSetting))
+            {
+                EditorGUI.indentLevel++;
+                eventSetting.arraySize = EditorGUILayout.DelayedIntField("Size", eventSetting.arraySize);
+                int size = eventSetting.arraySize;
+                for (int i = 0; i < size; i++)
+                {
+                    EditorGUILayout.PropertyField(eventSetting.GetArrayElementAtIndex(i));
+                }
+                EditorGUI.indentLevel--;
+            }*/
+            //fadeGroup.target = EditorGUILayout.Foldout(fadeGroup.target, "BeginFadeGroup");
+            //if (EditorGUILayout.BeginFadeGroup(fadeGroup.faded))
+            //{
+            //    EditorGUI.indentLevel++;
+            //    var eventSetting = serializedObject.FindProperty("AreaEventSetting.AreaItems");
+            //    EditorGUILayout.PropertyField(eventSetting, true);
+            //    EditorGUILayout.PropertyField(serializedObject.FindProperty("MapEventSetting"), true);
+            //    this.selectOption = EditorGUILayout.IntPopup("IntPopup", (int)this.selectOption, new string[] { "01", "1", "2" }, new int[] { 0, 1, 2 });
+            //    this.selectOption = EditorGUILayout.IntSlider("IntSlider", (int)this.selectOption, 0, 2);
+            //    this.selectOption = EditorGUILayout.MaskField("MaskField", (int)this.selectOption, new string[] { "mask1", "mask2", "mask3" });
+            //    this.selectOption = EditorGUILayout.Popup("Popup", (int)this.selectOption, new string[] { "s1", "s2", "s3" });
+            //    EditorGUI.indentLevel--;
+            //}
+            //EditorGUILayout.EndFadeGroup();
+
+            //serializedObject.ApplyModifiedProperties();
         }
         #endregion
 
