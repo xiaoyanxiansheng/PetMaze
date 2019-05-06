@@ -346,7 +346,7 @@ namespace PetMaze
         /// <returns></returns>
         public string GetSaveScvPath()
         {
-            string path = path = MapSetting.Instance.Path + MapEventSetting.Id + ".csv";
+            string path = path = MapSetting.Instance.Path + "PetMaze/" + MapEventSetting.Id + ".csv";
             path = path.Replace('\\', '/');
             return path;
         }
@@ -356,7 +356,7 @@ namespace PetMaze
         /// <returns></returns>
         public string GetOpenCsvPath()
         {
-            string path = path = MapSetting.Instance.Path + MapEventSetting.Id + ".csv";
+            string path = path = MapSetting.Instance.Path + "PetMaze/" + MapEventSetting.Id + ".csv";
             path = path.Replace('\\', '/');
             return path;
         }
