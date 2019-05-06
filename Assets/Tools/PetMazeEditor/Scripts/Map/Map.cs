@@ -16,7 +16,7 @@ namespace PetMaze
         // 地图ID
         public string Id = MapSetting.MazeTemplateEventId;
         // 地图尺寸
-        [Header("改变大小之后要重新保存再加载一下")]
+        [Header("改变大小之后保存一下")]
         public int Size = 10;
         // 主题
         public string Theme = "";
