@@ -40,47 +40,149 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ade6380cd7c91334cab0ded59a8e7c47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Path: D:/xyj/PetMazeEditor/PetMaze/Assets/Tools/PetMazeEditor/TestFile/
+  Path: D:/xyj/Client/Config/
   _eventList:
-  - name: "\u7BB1\u5B50"
+  - name: "\u666E\u901A\u5730\u5757"
+    id: 0
+    eventList:
+    - name: "\u666E\u901A\u5730\u5757"
+      id: 1
+      icon: {fileID: 0}
+  - name: "\u51FA\u751F\u70B9"
     id: 1
     eventList:
-    - name: "\u7BB1\u5B501"
-      id: 101
-      icon: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
-    - name: "\u7BB1\u5B502"
-      id: 102
-      icon: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
-    - name: "\u7BB1\u5B503"
-      id: 103
-      icon: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
-  - name: "\u94A5\u5319"
+    - name: "\u51FA\u751F\u70B9"
+      id: 100
+      icon: {fileID: 0}
+  - name: "\u5C0F\u602A\u5173\u5361"
     id: 2
     eventList:
-    - name: "\u94A5\u53191"
-      id: 201
-      icon: {fileID: 10912, guid: 0000000000000000f000000000000000, type: 0}
-    - name: "\u94A5\u53192"
-      id: 202
-      icon: {fileID: 10912, guid: 0000000000000000f000000000000000, type: 0}
-  - name: "\u94A5\u5319"
-    id: 2
+    - name: "\u5C0F\u602A\u5173\u5361"
+      id: 200
+      icon: {fileID: 2800000, guid: 633a278e87918b5469bad0b411add3eb, type: 3}
+  - name: "\u5B9D\u7BB1"
+    id: 3
     eventList:
-    - name: "\u94A5\u53191"
-      id: 201
-      icon: {fileID: 10912, guid: 0000000000000000f000000000000000, type: 0}
-    - name: "\u94A5\u53192"
-      id: 202
-      icon: {fileID: 10912, guid: 0000000000000000f000000000000000, type: 0}
-  - name: "\u94A5\u5319"
-    id: 2
+    - name: "\u666E\u901A\u5B9D\u7BB1"
+      id: 300
+      icon: {fileID: 2800000, guid: a1115907f3b090a43bc99668bddea4a9, type: 3}
+    - name: "\u94A5\u5319\u5B9D\u7BB1"
+      id: 301
+      icon: {fileID: 2800000, guid: a1115907f3b090a43bc99668bddea4a9, type: 3}
+    - name: "\u602A\u7269\u5B9D\u7BB1"
+      id: 352
+      icon: {fileID: 0}
+  - name: "\u5899"
+    id: 4
     eventList:
-    - name: "\u94A5\u53191"
-      id: 201
-      icon: {fileID: 10912, guid: 0000000000000000f000000000000000, type: 0}
-    - name: "\u94A5\u53192"
-      id: 202
-      icon: {fileID: 10912, guid: 0000000000000000f000000000000000, type: 0}
+    - name: "\u5899"
+      id: 400
+      icon: {fileID: 2800000, guid: c6134e2a5fe52c544927d83b04e4b2f7, type: 3}
+    - name: "\u5899"
+      id: 401
+      icon: {fileID: 2800000, guid: c6134e2a5fe52c544927d83b04e4b2f7, type: 3}
+    - name: "\u5899"
+      id: 402
+      icon: {fileID: 2800000, guid: c6134e2a5fe52c544927d83b04e4b2f7, type: 3}
+  - name: "\u51FA\u53E3"
+    id: 5
+    eventList:
+    - name: "\u51FA\u53E3"
+      id: 500
+      icon: {fileID: 0}
+  - name: "boss\u5173\u5361"
+    id: 6
+    eventList:
+    - name: "boss\u5173\u5361"
+      id: 600
+      icon: {fileID: 2800000, guid: 50fb3e7dab68bb040b22becef54654d8, type: 3}
+  - name: "\u4F20\u9001\u95E8"
+    id: 7
+    eventList:
+    - name: "\u4F20\u9001\u95E8"
+      id: 700
+      icon: {fileID: 2800000, guid: c87f963d56c81c9408f1d7522d571c6b, type: 3}
+  - name: "\u968F\u673A\u76D2"
+    id: 8
+    eventList:
+    - name: "\u968F\u673A\u76D2"
+      id: 800
+      icon: {fileID: 2800000, guid: b10019f26bf1e7446a349c0e8e64d3e8, type: 3}
+    - name: "\u968F\u673A\u76D2"
+      id: 801
+      icon: {fileID: 2800000, guid: b10019f26bf1e7446a349c0e8e64d3e8, type: 3}
+  - name: "\u8FF7\u5BAB\u5730\u56FE"
+    id: 9
+    eventList:
+    - name: "\u8FF7\u5BAB\u5730\u56FE"
+      id: 900
+      icon: {fileID: 2800000, guid: 488f612572648c641b736505bd6aaea0, type: 3}
+  - name: npc
+    id: 10
+    eventList:
+    - name: npc
+      id: 1000
+      icon: {fileID: 2800000, guid: 139dc50ba5a6b59418a18cfe225ed76c, type: 3}
+    - name: npc
+      id: 1001
+      icon: {fileID: 2800000, guid: 139dc50ba5a6b59418a18cfe225ed76c, type: 3}
+    - name: npc
+      id: 1002
+      icon: {fileID: 2800000, guid: 139dc50ba5a6b59418a18cfe225ed76c, type: 3}
+    - name: "npc\u5546\u4EBA"
+      id: 1003
+      icon: {fileID: 0}
+  - name: "\u5546\u5E97"
+    id: 11
+    eventList:
+    - name: "\u5546\u5E97"
+      id: 1100
+      icon: {fileID: 0}
+  - name: 
+    id: 12
+    eventList:
+    - name: 
+      id: 1200
+      icon: {fileID: 0}
+    - name: 
+      id: 1201
+      icon: {fileID: 0}
+  - name: 
+    id: 13
+    eventList:
+    - name: 
+      id: 1300
+      icon: {fileID: 0}
+    - name: 
+      id: 1301
+      icon: {fileID: 0}
+  - name: 
+    id: 14
+    eventList:
+    - name: 
+      id: 1400
+      icon: {fileID: 0}
+  - name: 
+    id: 110
+    eventList:
+    - name: 
+      id: 11000
+      icon: {fileID: 0}
+    - name: 
+      id: 11001
+      icon: {fileID: 0}
+    - name: 
+      id: 11002
+      icon: {fileID: 0}
+    - name: 
+      id: 11003
+      icon: {fileID: 0}
+    - name: 
+      id: 11004
+      icon: {fileID: 0}
+    - name: 
+      id: 11005
+      icon: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
