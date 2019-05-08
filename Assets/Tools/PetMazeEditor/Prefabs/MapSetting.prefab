@@ -53,7 +53,7 @@ MonoBehaviour:
     eventList:
     - name: "\u51FA\u751F\u70B9"
       id: 100
-      icon: {fileID: 0}
+      icon: {fileID: 10912, guid: 0000000000000000f000000000000000, type: 0}
   - name: "\u5C0F\u602A\u5173\u5361"
     id: 2
     eventList:
@@ -89,7 +89,7 @@ MonoBehaviour:
     eventList:
     - name: "\u51FA\u53E3"
       id: 500
-      icon: {fileID: 0}
+      icon: {fileID: 10910, guid: 0000000000000000f000000000000000, type: 0}
   - name: "boss\u5173\u5361"
     id: 6
     eventList:

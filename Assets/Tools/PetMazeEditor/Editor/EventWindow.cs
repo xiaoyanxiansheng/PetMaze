@@ -28,6 +28,8 @@ namespace PetMaze
         {
             _tabNameList = new List<string>();
             _tabNameList.Add("全部");
+            if (MapSetting.Instance == null)
+                return;
             List<string> fatherNameList = MapSetting.Instance.GetEventFatherNameList();
             foreach (string name in fatherNameList)
             {
