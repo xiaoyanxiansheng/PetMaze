@@ -265,7 +265,9 @@ namespace PetMaze
             {
                 Dictionary<string, string> dic = new Dictionary<string, string>();
                 dic["ID"] = (eventItem.PointX * width + eventItem.PointY + 1).ToString();
-                for(int i = 0; i < eventItem.ValueList.Count; i++)
+                dic["PosX"] = (eventItem.PointX + 1).ToString();
+                dic["PosY"] = (eventItem.PointY + 1).ToString();
+                for (int i = 0; i < eventItem.ValueList.Count; i++)
                 {
                     int index = i + 1;
                     dic["Event" + index] = eventItem.ValueList[i].Id;
