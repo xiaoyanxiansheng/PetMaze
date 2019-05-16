@@ -92,9 +92,9 @@ namespace PetMaze
         #endregion
 
         #region menber
-        private const int _mapRangeEventCount = 4;
-        private const int _mapRandomEventCount = 4;
-        private const int _mapRandomEventItenCount = 4;
+        private const int _mapRangeEventCount = 10;
+        private const int _mapRandomEventCount = 10;
+        private const int _mapRandomEventItenCount = 10;
         private Color _selectColor = new Color(1, 0.62f, 0.14f);
         private Color _disSelectColor = new Color(0.5f, 0.5f, 0.5f);
         private static Map _instance;
