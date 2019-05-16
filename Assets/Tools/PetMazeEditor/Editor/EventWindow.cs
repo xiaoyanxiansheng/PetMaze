@@ -79,6 +79,8 @@ namespace PetMaze
 
         private void DrawScrollView()
         {
+            if (_eventMap == null)
+                return;
             List<EventInfo> eventList = _eventMap[_selectTab];
             if (eventList.Count == 0)
             {

@@ -40,7 +40,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ade6380cd7c91334cab0ded59a8e7c47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Path: D:/xyj/Client/Config/
+  Path: D:/xyj/xyj_new/Client/Config/
   _eventList:
   - name: "\u666E\u901A\u5730\u5757"
     id: 0
